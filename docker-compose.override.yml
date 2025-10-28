@@ -1,0 +1,32 @@
+services:
+  netbox:
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.netbox.rule=HostRegexp(`${NETBOX_FQDN}`)
+      - traefik.http.routers.netbox.entrypoints=${NETBOX_ENTRYPOINT}
+      - traefik.http.routers.netbox.tls.certresolver=${NETBOX_RESOLVER}
+      - traefik.http.services.netbox.loadbalancer.server.port=8000
+      - traefik.http.routers.netbox.service=${NETBOX_SERVICE}
+    ports:
+      - "8000:8080"
+    # If you want the Nginx unit status page visible from the
+    # outside of the container add the following port mapping:
+    # - "8001:8081"
+    #     Time for which the health check can fail after the container is started.
+    #     This depends mostly on the performance of your database. On the first start,
+    #     when all tables need to be created the start_period should be higher than on
+    #     subsequent starts. For the first start after major version upgrades of NetBox
+    #     the start_period might also need to be set higher.
+    #     Default value in our docker-compose.yml is 60s
+    healthcheck:
+      start_period: 90s
+
+  netbox-worker:
+    restart: unless-stopped
+  postgres:
+    restart: unless-stopped
+  redis:
+    restart: unless-stopped
+  redis-cache:
+    restart: unless-stopped
