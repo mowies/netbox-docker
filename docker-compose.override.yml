@@ -3,7 +3,7 @@ services:
     restart: unless-stopped
     labels:
       - traefik.enable=true
-      - traefik.http.routers.netbox.rule=HostRegexp(`${NETBOX_FQDN}`)
+      - traefik.http.routers.netbox.rule=Host(`${NETBOX_FQDN}`)
       - traefik.http.routers.netbox.entrypoints=${NETBOX_ENTRYPOINT}
       - traefik.http.routers.netbox.tls.certresolver=${NETBOX_RESOLVER}
       - traefik.http.services.netbox.loadbalancer.server.port=8000
